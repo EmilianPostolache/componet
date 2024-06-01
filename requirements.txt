@@ -21,3 +21,4 @@ scikit-learn
 diffusers
 accelerate
 sounddevice
+jupyter

@@ -24,7 +24,7 @@ pip install -r requirements.txt
 | [moisesdb-conditional_epoch=250.ckpt](https://drive.google.com/drive/folders/1jBpCGQymvK3_-28m1P8IxKwNFqVORlqe?usp=sharing)  | [MoisesDB](https://github.com/moises-ai/moises-db) | `exp/train_moisesdb_conditional.yaml` | CompoNet model trained on MoisesDB dataset using AudioLDM2-large as base model, finetuing ControlNet adapter.   |
 | [slakh-conditional_epoch=93.ckpt](https://drive.google.com/drive/folders/1Cpv_7elu2BvZNJW3pXQcKMqxDoMqJP6k?usp=sharing)      | [Slakh2100](http://www.slakh.com/) | `exp/train_slakh_conditional_attentions.yaml` | CompoNet model trained on Slakh2100 dataset using AudioLDM2-large as base model, finetuing ControlNet adapter and UNet cross-attentions. |
 
-### Inference example
+### Inference
 
 Inference can be performed using `inference.ipynb`. The model is first instantiated and the checkpoint loaded. Specify
 the model config (the `Train Config` in the table above without `.yaml` extension) as `exp_cfg` and checkpoint path in `ckpt_path`.  
@@ -102,6 +102,22 @@ STEMS = ['bass', 'bowed_strings', 'drums', 'guitar', 'other', 'other_keys', 'oth
 GENRES = ['blues', 'bossa_nova', 'country', 'electronic', 'jazz', 'musical_theatre', 'pop', 'rap', 'reggae', 'rock', 'singer_songwriter', 'world_folk']
 ```
 
-### Training example
+### Training
 
-TODO
+For training first copy `.env.tmp` and remove the `.tmp` extension. Then modify the resulting `.env` file changing the
+following fields with your `wandb` data:
+
+```text
+WANDB_PROJECT=wandbprojectname
+WANDB_ENTITY=wandbuser
+WANDB_API_KEY=wandbapikey
+```
+
+Training then can be run by calling `train.py` with the desired experiment. Data has to be provided as [webdataset](https://webdataset.github.io/webdataset/) 
+shards: scripts for sharding the datasets will be provided. You also have to specify a `TAG` describing the experiment.
+
+```bash
+TAG=moisesdb-conditional python train.py exp=train_moisesdb_conditional datamodule.train_dataset.path=data/moisesdb/{0..18}.tar datamodule.val_dataset.path=data/moisesdb/19.tar
+```
+
+

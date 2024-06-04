@@ -1,7 +1,6 @@
 __pycache__
 .mypy_cache
 .env
-config.yaml
 .DS_Store
 .DS_Store/
 .hydra

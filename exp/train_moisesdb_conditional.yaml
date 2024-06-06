@@ -32,7 +32,7 @@ datamodule:
     _target_: main.data.dataset_moisesdb.collate_fn_conditional
     _partial_: True
   drop_last: True
-  num_workers: 8 # for A100: 8
+  num_workers: 2 # for A100: 8
   pin_memory: True
   persistent_workers: True
   multiprocessing_context: spawn

@@ -101,6 +101,7 @@ def collate_fn_conditional(samples):
     xs = []
     ys = []
     zs = []
+    ws = []
 
     for subset_pair, sample in zip(subsets, samples):
         stems, genre = sample
@@ -110,11 +111,14 @@ def collate_fn_conditional(samples):
         out_stems_prompt = [stem_keys[i] for i in out_indices]
         in_track = torch.cat([stems[stem_keys[i]][0] for i in in_indices], dim=0).sum(dim=0, keepdim=True)
         out_track = torch.cat([stems[stem_keys[i]][0] for i in out_indices], dim=0).sum(dim=0, keepdim=True)
+        total_mix = torch.cat([stem[0] for stem in stems.values()], dim=0).sum(dim=0, keepdim=True)
+
         xs.append(out_track)
         ys.append(in_track)
         zs.append(f"genre: {genre}; in: {', '.join(in_stems_prompt)}; out: {', '.join(out_stems_prompt)}")
+        ws.append(total_mix)
 
-    return torch.concat(xs), torch.concat(ys), zs
+    return torch.concat(xs), torch.concat(ys), zs, ws
 
 
 if __name__ == '__main__':

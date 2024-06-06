@@ -88,6 +88,7 @@ def collate_fn_conditional(samples):
     xs = []
     ys = []
     zs = []
+    ws = []
 
     default_shape = list(samples[0].values())[0].shape
 
@@ -100,11 +101,14 @@ def collate_fn_conditional(samples):
         in_track = torch.cat([stems[stem_keys[i]] for i in in_indices], dim=0).sum(dim=0, keepdim=True) #\
                            #  if in_indices else torch.zeros(default_shape)
         out_track = torch.cat([stems[stem_keys[i]] for i in out_indices], dim=0).sum(dim=0, keepdim=True)
+        total_mix = torch.cat([stem[0] for stem in stems.values()], dim=0).sum(dim=0, keepdim=True)
+
         xs.append(out_track)
         ys.append(in_track)
         zs.append(f"in: {', '.join(in_stems_prompt)}; out: {', '.join(out_stems_prompt)}")
+        ws.append(total_mix)
 
-    return torch.concat(xs), torch.concat(ys), zs
+    return torch.concat(xs), torch.concat(ys), zs, ws
 
 
 if __name__ == '__main__':
